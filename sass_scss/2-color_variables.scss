@@ -1,0 +1,11 @@
+$my-text-color: #3D3D3D;
+$my-text-colorB: #6D6D6D;
+body {
+  color: $my-text-color;
+  background-color: $my-text-colorB; }
+
+p {
+  color: $my-text-color; }
+
+h2 {
+  background-color: $my-text-colorB; }
