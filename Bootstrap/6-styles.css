@@ -14,7 +14,7 @@
     />
 
     <style>
-      /* btn-primary background and hover/focus/active */
+      
       .btn-primary {
         background-color: #e0003c;
         border-color: #e0003c;
@@ -28,7 +28,7 @@
         border-color: #bc1340;
       }
 
-      /* btn-outline-primary text and border color */
+      
       .btn-outline-primary {
         color: #e0003c;
         border-color: #e0003c;
@@ -43,7 +43,7 @@
         border-color: #e0003c;
       }
 
-      /* Force all links (a) text color normally, hover and focus */
+      
       a {
         color: #e0003c !important;
         text-decoration: none;
@@ -54,7 +54,7 @@
         text-decoration: underline;
       }
 
-      /* Card border color and border radius (including header and footer) */
+    
       .card,
       .card > .card-header,
       .card > .card-footer {
@@ -67,7 +67,7 @@
         background-color: #e0003c;
       }
 
-      /* text-muted color override */
+      
       .text-muted {
         color: #8c8c8c !important;
       }
