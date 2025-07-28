@@ -15,7 +15,6 @@ function countPrimeNumbers() {
   return count;
 }
 
-// This logs the time of 100 calls to countPrimeNumbers, but at the end of the stack
 setTimeout(() => {
   const t0 = performance.now();
 
