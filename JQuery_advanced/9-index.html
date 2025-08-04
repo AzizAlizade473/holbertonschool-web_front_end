@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 7</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  form {
+    margin-bottom: 20px;
+  }
+
+  input[type="text"] {
+    padding: 8px;
+    font-size: 16px;
+    width: 300px;
+  }
+
+  input[type="submit"] {
+    padding: 8px 16px;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  ul#results {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul#results li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  ul#results li p {
+    margin: 5px 0;
+  }
+
+  #pagination {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  #pagination li {
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 5px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+
+  #pagination li:hover {
+    background-color: #e0e0e0;
+  }
+
+  #pagination li.active {
+    font-weight: bold;
+    background-color: #d0d0d0;
+    pointer-events: none;
+  }
+
+ 
+  .loading {
+    opacity: 0.2;
+  }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+
+<script>
+  function createSearchForm() {
+    const $input = $('<input type="text">');
+    const $submit = $('<input type="submit">');
+    const $form = $('<form></form>').append($input, $submit);
+    const $resultsList = $('<ul></ul>');
+    const $pagination = $('<ul id="pagination"></ul>');
+
+    $('body').append($form, $resultsList, $pagination);
+
+    $form.on('submit', function (e) {
+      e.preventDefault();
+      const searchTerm = $input.val();
+      queryWikipedia(searchTerm, 0);
+    });
+  }
+
+  function addNewArticle(id, title, snippet) {
+    const $li = $('<li></li>');
+    const $p1 = $('<p></p>').append($('<span></span>').text(id + ' - '), $('<b></b>').text(title));
+    const $p2 = $('<p></p>').html(snippet);
+    $li.append($p1, $p2);
+    $('ul').first().append($li);
+  }
+
+  function buildPagination(numberOfItems, itemsPerPage, currentOffset) {
+    const $pagination = $('#pagination');
+    $pagination.empty();
+    const totalPages = Math.ceil(numberOfItems / itemsPerPage);
+    const currentPage = currentOffset / itemsPerPage;
+
+    for (let i = 0; i < totalPages; i++) {
+      const $pageItem = $('<li></li>').text(i + 1);
+      if (i === currentPage) {
+        $pageItem.addClass('active');
+      }
+      $pageItem.on('click', () => {
+        const searchTerm = $('input[type="text"]').val();
+        queryWikipedia(searchTerm, i * itemsPerPage);
+      });
+      $pagination.append($pageItem);
+    }
+  }
+
+  
+  function displayLoading(loading) {
+    const $ul = $('ul').first();
+    if (loading) {
+      if (!$ul.parent().hasClass('loading')) {
+        $ul.wrap('<div class="loading"></div>');
+      }
+    } else {
+      if ($ul.parent().hasClass('loading')) {
+        $ul.unwrap();
+      }
+    }
+  }
+
+  function queryWikipedia(search, offset = 0) {
+    const data = {
+      action: 'query',
+      format: 'json',
+      list: 'search',
+      srsearch: search,
+      sroffset: offset,
+      srlimit: 10,
+      origin: '*'
+    };
+
+    displayLoading(true); 
+
+    $.ajax({
+      url: 'https://en.wikipedia.org/w/api.php',
+      method: 'GET',
+      data: data,
+      success: function (res) {
+        const results = res.query.search;
+        $('ul').first().empty();
+        results.forEach(result => {
+          addNewArticle(result.pageid, result.title, result.snippet);
+        });
+        const totalHits = res.query.searchinfo.totalhits;
+        buildPagination(totalHits, 10, offset);
+        displayLoading(false); 
+      },
+      error: function () {
+        alert("Failed to load results.");
+        displayLoading(false);
+      }
+    });
+  }
+
+  $(document).ready(function () {
+    createSearchForm();
+  });
+</script>
+</head>
+<body>
+</body>
+</html>
