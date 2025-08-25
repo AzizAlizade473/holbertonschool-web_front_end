@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Login Example with js-cookie</title>
+  <style>
+    #logout {
+      font-weight: normal;
+      font-style: italic;
+      margin-left: 10px;
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
+  </style>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+</head>
+
+<body onload="showWelcomeMessageOrForm()">
+
+  
+  <div id="formContainer">
+    <h2>Login to the website</h2>
+    <input type="text" id="firstname" placeholder="Firstname">
+    <input type="text" id="email" placeholder="Email">
+    <button onclick="setCookiesAndShowWelcomeMessage()">Log me in</button>
+  </div>
+
+  <script>
+   
+    function setCookiesAndShowWelcomeMessage() {
+      const firstname = document.getElementById("firstname").value;
+      const email = document.getElementById("email").value;
+
+      // Save cookies for 10 days with path
+      Cookies.set("firstname", firstname, { expires: 10, path: '/' });
+      Cookies.set("email", email, { expires: 10, path: '/' });
+
+      showWelcomeMessageOrForm();
+    }
+
+    function showForm() {
+      const welcome = document.getElementById("welcome");
+      if (welcome) {
+        welcome.remove();
+      }
+      document.getElementById("formContainer").style.display = "block";
+    }
+
+    function hideForm() {
+      document.getElementById("formContainer").style.display = "none";
+    }
+
+    function deleteCookiesAndShowForm() {
+      
+      Cookies.remove("firstname", { path: '/' });
+      Cookies.remove("email", { path: '/' });
+      showForm();
+    }
+
+    function showWelcomeMessageOrForm() {
+      const firstname = Cookies.get("firstname");
+
+      if (firstname) {
+        hideForm();
+
+        let welcome = document.getElementById("welcome");
+        if (!welcome) {
+          welcome = document.createElement("h1");
+          welcome.id = "welcome";
+        }
+
+        welcome.innerHTML = `Welcome ${firstname} <span id="logout">(logout)</span>`;
+        document.body.appendChild(welcome);
+
+        document.getElementById("logout").onclick = function () {
+          deleteCookiesAndShowForm();
+        };
+
+      } else {
+        showForm();
+      }
+    }
+  </script>
+</body>
+
+</html>
