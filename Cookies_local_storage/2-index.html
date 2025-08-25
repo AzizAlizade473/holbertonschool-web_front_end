@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Cookie Example</title>
+</head>
+
+<body>
+  <h2>Login to the website</h2>
+
+  <input type="text" id="firstname" placeholder="Firstname">
+  <input type="text" id="email" placeholder="Email">
+
+  <button onclick="setCookies()">Log me in</button>
+
+  <h1>Cookies</h1>
+  <button onclick="showCookies()">Show the cookies</button>
+
+
+   <script>
+    function setCookies() {
+      const firstname = document.getElementById("firstname").value;
+      const email = document.getElementById("email").value;
+
+      // Expiration: 10 days
+      const d = new Date();
+      d.setTime(d.getTime() + (10 * 24 * 60 * 60 * 1000));
+      let expires = "expires=" + d.toUTCString();
+
+      // Save cookies with expiration + path
+      document.cookie = "firstname=" + firstname + ";" + expires + ";path=/";
+      document.cookie = "email=" + email + ";" + expires + ";path=/";
+    }
+
+    // Function to get a cookie by name
+    function getCookie(name) {
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookiesArray = decodedCookie.split(';');
+      
+      for (let cookie of cookiesArray) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(name + "=") === 0) {
+          return cookie.substring(name.length + 1);
+        }
+      }
+      return ""; // return empty string if not found
+    }
+
+    function showCookies() {
+      const email = getCookie("email");
+      const firstname = getCookie("firstname");
+
+      const p = document.createElement("p");
+      p.innerHTML = `Email: ${email} - Firstname: ${firstname}`;
+      document.body.appendChild(p);
+    }
+  </script>
+</body>
+
+</html>
