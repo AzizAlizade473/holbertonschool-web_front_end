@@ -24,17 +24,17 @@
       const firstname = document.getElementById("firstname").value;
       const email = document.getElementById("email").value;
 
-      // Expiration: 10 days
+     
       const d = new Date();
       d.setTime(d.getTime() + (10 * 24 * 60 * 60 * 1000));
       let expires = "expires=" + d.toUTCString();
 
-      // Save cookies with expiration + path
+      
       document.cookie = "firstname=" + firstname + ";" + expires + ";path=/";
       document.cookie = "email=" + email + ";" + expires + ";path=/";
     }
 
-    // Function to get a cookie by name
+    
     function getCookie(name) {
       const decodedCookie = decodeURIComponent(document.cookie);
       const cookiesArray = decodedCookie.split(';');
@@ -45,7 +45,7 @@
           return cookie.substring(name.length + 1);
         }
       }
-      return ""; // return empty string if not found
+      return "";
     }
 
     function showCookies() {
